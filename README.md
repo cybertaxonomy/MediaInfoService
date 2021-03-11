@@ -43,7 +43,7 @@ The service expects one configuration parameter
 
 * `mediaHome`: The root folder where the media files are found.
 
-For more details on the principle options of how to set the configuration property see [](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config)
+For more details on the principle options of how to set the configuration property see [https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config)
   
 
 ### Build Tools Reference Documentation
