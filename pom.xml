@@ -13,8 +13,8 @@
   <artifactId>metadata-service</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>metadata-service</name>
-  <description>A media metada REST service</description>
+  <name>media-info-service</name>
+  <description>A media info and metada REST service</description>
   <properties>
     <java.version>8</java.version>
   </properties>
