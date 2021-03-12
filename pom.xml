@@ -10,7 +10,7 @@
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>org.cybertaxonomy.media</groupId>
-  <artifactId>metadata-service</artifactId>
+  <artifactId>media-info-service</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>media-info-service</name>
