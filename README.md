@@ -1,4 +1,4 @@
-# Metadata Information Service
+# Media Information Service
 
 A simple and lightweight service to make media information and metadata accessible as REST service.
 
@@ -45,6 +45,16 @@ The service expects one configuration parameter
 
 For more details on the principle options of how to set the configuration property see [https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config)
   
+#### Tomcat
+
+in 
+
+<Context>
+  ...
+  <Parameter name="companyName" value="My Company, Incorporated"
+         override="false"/>
+  ...
+</Context>
 
 ### Build Tools Reference Documentation
 For further reference, please consider the following sections:
