@@ -65,7 +65,7 @@ public class MediaInfoCache implements IMediaInfoCache, DisposableBean {
         if(cacheFile == null) {
             cacheFile = Files.createTempDirectory("MediaInfoCache-");
         }
-        return cacheFile.getFileName().toString();
+        return cacheFile.toFile().getAbsolutePath();
     }
 
     @Override
