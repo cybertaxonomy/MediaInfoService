@@ -111,7 +111,7 @@ public class MediaInfoController {
                     GenericImageMetadataItem gim = (GenericImageMetadataItem) item;
                     String key = gim.getKeyword();
                     String text = gim.getText();
-                    if(text != null && !text.isBlank()) {
+                    if(text != null && !text.isEmpty()) {
                         if (!mdMap.containsKey(key))  {
                             mdMap.put(key, new ArrayList<>());
                         }
