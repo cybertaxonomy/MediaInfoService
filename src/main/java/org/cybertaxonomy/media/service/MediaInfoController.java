@@ -25,6 +25,9 @@ import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.GenericImageMetadata.GenericImageMetadataItem;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
+import org.ehcache.spi.loaderwriter.CacheLoadingException;
+import org.ehcache.spi.loaderwriter.CacheWritingException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,14 +46,38 @@ public class MediaInfoController {
     @Value("${mediaHome}")
     private String mediaHome;
 
+    @Autowired
+    private IMediaInfoCache cache;
+
     @GetMapping("/info")
     public MediaInfo doInfo(@RequestParam(value = "file", required = true) String relativePath) {
+
+        MediaInfo mediaInfo = null;
         try {
-            return readImageInfo(relativePath);
-        } catch (IOException e) {
-            LOG.log(Level.SEVERE, "Error reading image info", e);
-            return null;
+            mediaInfo = cache.lookup(relativePath);
+            if(mediaInfo != null) {
+                LOG.log(Level.FINE, "MediaInfo for " + relativePath + " read from cache");
+            }
+        } catch (CacheLoadingException | IOException e1) {
+            LOG.log(Level.WARNING, "Cannot use cache for lookup", e1);
         }
+
+        if(mediaInfo == null) {
+            try {
+                mediaInfo = readImageInfo(relativePath);
+            } catch (IOException e) {
+                LOG.log(Level.SEVERE, "Error reading image info", e);
+            }
+            try {
+                if(mediaInfo != null) {
+                    cache.put(relativePath, mediaInfo);
+                    LOG.log(Level.FINE, "MediaInfo for " + relativePath + " put in to cache");
+                }
+            } catch (CacheWritingException | IOException e) {
+                LOG.log(Level.WARNING, "Cannot write to cache ", e);
+            }
+        }
+        return mediaInfo;
     }
 
     private MediaInfo readImageInfo(String relativePath) throws IOException {

@@ -8,6 +8,7 @@
 */
 package org.cybertaxonomy.media.service;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,9 @@ import java.util.Map;
  * @author a.kohlbecker
  * @since Mar 11, 2021
  */
-public class MediaInfo {
+public class MediaInfo implements Serializable {
+
+    private static final long serialVersionUID = -161167716008058196L;
 
     private int width;
     private int height;
