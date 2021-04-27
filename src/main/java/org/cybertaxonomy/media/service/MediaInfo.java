@@ -9,6 +9,7 @@
 package org.cybertaxonomy.media.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -23,8 +24,9 @@ public class MediaInfo {
     private int bitPerPixel;
     private String colorType;
     private String formatName;
+    private String extension;
     private String mimeType;
-    private Map<String, String> metaData = new HashMap<>();
+    private Map<String, List<String>> metaData = new HashMap<>();
 
     public int getWidth() {
         return width;
@@ -50,11 +52,11 @@ public class MediaInfo {
         this.bitPerPixel = bitPerPixel;
     }
 
-    public Map<String, String> getMetaData() {
+    public Map<String, List<String>> getMetaData() {
         return metaData;
     }
 
-    public void setMetaData(Map<String, String> metaData) {
+    public void setMetaData(Map<String, List<String>> metaData) {
         this.metaData = metaData;
     }
 
@@ -81,6 +83,13 @@ public class MediaInfo {
 
     public void setColorType(String colorType) {
         this.colorType = colorType;
+    }
+
+    public String getExtenstion() {
+        return extension;
+    }
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
 

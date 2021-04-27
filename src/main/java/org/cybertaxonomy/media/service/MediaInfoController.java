@@ -12,10 +12,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageInfo;
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.Imaging;
@@ -59,8 +62,9 @@ public class MediaInfoController {
             LOG.log(Level.INFO, "processing request for: " + mediaFile.getAbsolutePath());
             inputStream = new FileInputStream(mediaFile);
             ImageInfo imageInfo = Imaging.getImageInfo(inputStream, null);
-
-            metadata.setFormatName(imageInfo.getFormatName());
+            ImageFormat imageFormat = imageInfo.getFormat();
+            metadata.setFormatName(imageFormat.getName());
+            metadata.setExtension(imageFormat.getExtension());
             metadata.setMimeType(imageInfo.getMimeType());
             metadata.setWidth(imageInfo.getWidth());
             metadata.setHeight(imageInfo.getHeight());
@@ -70,24 +74,28 @@ public class MediaInfoController {
             inputStream.close();
             inputStream = new FileInputStream(mediaFile);
 
+
             ImageMetadata imageMetaData = Imaging.getMetadata(inputStream, null);
-            Map<String, String> mdMap = metadata.getMetaData();
+            Map<String, List<String>> mdMap = metadata.getMetaData();
             for (ImageMetadataItem item : imageMetaData.getItems()) {
                 if (GenericImageMetadataItem.class.isAssignableFrom(item.getClass())) {
                     // no interest in GIFImageMetadata since this only includes
                     // positioning information etc
                     GenericImageMetadataItem gim = (GenericImageMetadataItem) item;
-                    if (mdMap.containsKey(gim.getKeyword())) {
-                        mdMap.replace(gim.getKeyword(), mdMap.get(gim.getKeyword() + "; " + gim.getText()));
-                    } else {
-                        mdMap.put(gim.getKeyword(), gim.getText());
+                    String key = gim.getKeyword();
+                    String text = gim.getText();
+                    if(text != null && !text.isBlank()) {
+                        if (!mdMap.containsKey(key))  {
+                            mdMap.put(key, new ArrayList<>());
+                        }
+                        if(!mdMap.get(gim.getKeyword()).stream().anyMatch(t -> t.equals(text))) {
+                            // add if no duplicate
+                            mdMap.get(gim.getKeyword()).add(text);
+                        }
                     }
                 }
             }
-            //metadata.setMetaData(mdMap);
-
             inputStream.close();
-
         } catch (ImageReadException e) {
             Logger.getLogger(this.getClass().toString()).log(Level.SEVERE,
                     "Could not read: " + relativePath + ". " + e.getMessage());
