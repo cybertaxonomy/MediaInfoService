@@ -10,6 +10,11 @@ There is one REST service end point by now:
 
 `/info?file=${filePath}`
 
+Optional query parameters: 
+
+* `refresh=true`: refresh the media metadata in in cache.
+
+
 Example respone:
 
 ~~~json
