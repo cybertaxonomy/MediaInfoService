@@ -50,16 +50,22 @@ public class MediaInfoController {
     private IMediaInfoCache cache;
 
     @GetMapping("/info")
-    public MediaInfo doInfo(@RequestParam(value = "file", required = true) String relativePath) {
+    public MediaInfo doInfo(
+            @RequestParam(value = "file", required = true) String relativePath,
+            @RequestParam(value = "refresh", required = false) Boolean refreshCache
+            ) {
 
         MediaInfo mediaInfo = null;
-        try {
-            mediaInfo = cache.lookup(relativePath);
-            if(mediaInfo != null) {
-                LOG.log(Level.FINE, "MediaInfo for " + relativePath + " read from cache");
+
+        if(refreshCache != null && !refreshCache) {
+            try {
+                mediaInfo = cache.lookup(relativePath);
+                if(mediaInfo != null) {
+                    LOG.log(Level.FINE, "MediaInfo for " + relativePath + " read from cache");
+                }
+            } catch (CacheLoadingException | IOException e1) {
+                LOG.log(Level.WARNING, "Cannot use cache for lookup", e1);
             }
-        } catch (CacheLoadingException | IOException e1) {
-            LOG.log(Level.WARNING, "Cannot use cache for lookup", e1);
         }
 
         if(mediaInfo == null) {
