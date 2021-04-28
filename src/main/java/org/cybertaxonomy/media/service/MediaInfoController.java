@@ -15,8 +15,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageInfo;
@@ -27,6 +25,8 @@ import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
 import org.ehcache.spi.loaderwriter.CacheLoadingException;
 import org.ehcache.spi.loaderwriter.CacheWritingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MediaInfoController {
 
-    protected static final Logger LOG = Logger.getLogger(MediaInfoController.class.getName());
+    private static Logger logger = LoggerFactory.getLogger(MediaInfoController.class);
 
     @Value("${mediaHome}")
     private String mediaHome;
@@ -57,14 +57,14 @@ public class MediaInfoController {
 
         MediaInfo mediaInfo = null;
 
-        if(refreshCache != null && !refreshCache) {
+        if(refreshCache == null || !refreshCache) {
             try {
                 mediaInfo = cache.lookup(relativePath);
                 if(mediaInfo != null) {
-                    LOG.log(Level.FINE, "MediaInfo for " + relativePath + " read from cache");
+                    logger.debug("MediaInfo for " + relativePath + " read from cache");
                 }
             } catch (CacheLoadingException | IOException e1) {
-                LOG.log(Level.WARNING, "Cannot use cache for lookup", e1);
+                logger.warn("Cannot use cache for lookup", e1);
             }
         }
 
@@ -72,15 +72,15 @@ public class MediaInfoController {
             try {
                 mediaInfo = readImageInfo(relativePath);
             } catch (IOException e) {
-                LOG.log(Level.SEVERE, "Error reading image info", e);
+                logger.error("Error reading image info", e);
             }
             try {
                 if(mediaInfo != null) {
                     cache.put(relativePath, mediaInfo);
-                    LOG.log(Level.FINE, "MediaInfo for " + relativePath + " put in to cache");
+                    logger.debug("MediaInfo for " + relativePath + " put in to cache");
                 }
             } catch (CacheWritingException | IOException e) {
-                LOG.log(Level.WARNING, "Cannot write to cache ", e);
+                logger.warn("Cannot write to cache ", e);
             }
         }
         return mediaInfo;
@@ -92,7 +92,7 @@ public class MediaInfoController {
         MediaInfo metadata = new MediaInfo();
         try {
             File mediaFile = new File(mediaHome + File.separator + relativePath);
-            LOG.log(Level.INFO, "processing request for: " + mediaFile.getAbsolutePath());
+            logger.debug("processing request for: " + mediaFile.getAbsolutePath());
             inputStream = new FileInputStream(mediaFile);
             ImageInfo imageInfo = Imaging.getImageInfo(inputStream, null);
             ImageFormat imageFormat = imageInfo.getFormat();
@@ -130,8 +130,7 @@ public class MediaInfoController {
             }
             inputStream.close();
         } catch (ImageReadException e) {
-            Logger.getLogger(this.getClass().toString()).log(Level.SEVERE,
-                    "Could not read: " + relativePath + ". " + e.getMessage());
+            logger.error("Could not read: " + relativePath + ". " + e.getMessage());
             throw new IOException(e);
         }
         return metadata;
