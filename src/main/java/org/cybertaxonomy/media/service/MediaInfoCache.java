@@ -25,6 +25,7 @@ import org.ehcache.config.units.MemoryUnit;
 import org.ehcache.spi.loaderwriter.CacheLoadingException;
 import org.ehcache.spi.loaderwriter.CacheWritingException;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -34,7 +35,21 @@ import org.springframework.stereotype.Component;
 @Component
 public class MediaInfoCache implements IMediaInfoCache, DisposableBean {
 
+    private static final int CACHE_EXPIRATION_HOURS_DEFAULT = 1;
+
     private static String CACHE_NAME = "default";
+
+    /**
+     * default set in /metadata-service/src/main/resources/application.properties
+     */
+    @Value("${cacheExpirationHours}")
+    private Long cacheExpirationHours;
+
+    /**
+     * default set in /metadata-service/src/main/resources/application.properties
+     */
+    @Value("${cacheExpirationMinutes}")
+    private Long cacheExpirationMinutes;
 
     private Path cacheFile;
 
@@ -51,9 +66,19 @@ public class MediaInfoCache implements IMediaInfoCache, DisposableBean {
                                 .offheap(1, MemoryUnit.MB)
                                 .disk(20, MemoryUnit.MB, true)
                             )
-                            .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofHours(1)))
+                            .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(cacheExpiration()))
                         )
                 .build(true);
+    }
+
+    public Duration cacheExpiration() {
+        if(cacheExpirationMinutes != null) {
+            return Duration.ofMinutes(cacheExpirationMinutes);
+        }
+        if(cacheExpirationHours != null) {
+            return Duration.ofHours(cacheExpirationHours);
+        }
+        return Duration.ofHours(CACHE_EXPIRATION_HOURS_DEFAULT);
     }
 
     /**

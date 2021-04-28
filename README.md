@@ -39,9 +39,13 @@ Currently only image files are supported.
 
 ### Setup
 
-The service expects one configuration parameter
+The service expects one mandatory configuration parameter
 
 * `mediaHome`: The root folder where the media files are found.
+
+Optional configuration parameter
+
+* `cacheExpirationMinutes` or `cacheExpirationHours`: These are exclusive options, `cacheExpirationHours` is set to **24 hours** per default.
 
 For more details on the principle options of how to set the configuration property see [https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config)
   
@@ -51,8 +55,7 @@ in
 
 <Context>
   ...
-  <Parameter name="companyName" value="My Company, Incorporated"
-         override="false"/>
+  <Parameter name="companyName" value="My Company, Incorporated" override="false"/>
   ...
 </Context>
 
