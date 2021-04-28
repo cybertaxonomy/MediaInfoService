@@ -15,7 +15,7 @@ Optional query parameters:
 * `refresh=true`: refresh the media metadata in in cache.
 
 
-Example respone:
+Example response:
 
 ~~~json
 {
