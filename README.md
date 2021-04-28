@@ -4,6 +4,8 @@ A simple and lightweight service to make media information and metadata accessib
 
 It can for example be used to complement image servers like [digilib](https://robcast.github.io/digilib/).   
 
+Includes a 3 tier cache for snappy responsiveness.
+
 ### Web service
 
 There is one REST service end point by now:
@@ -12,7 +14,7 @@ There is one REST service end point by now:
 
 Optional query parameters: 
 
-* `refresh=true`: refresh the media metadata in in cache.
+* `refresh=true`: update the cache with the media metadata for the file specified.
 
 
 Example response:
