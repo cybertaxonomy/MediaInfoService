@@ -66,6 +66,31 @@ in
   ...
 </Context>
 
+### Test run with maven
+
+start the serverf with maven
+
+~~~
+mvn jetty:run-war
+~~~
+
+test the web service
+
+with curl & [jq](https://stedolan.github.io/jq/)
+
+~~~
+curl http://localhost:8080/info\?file=Orobanche_aegyptiaca.jpg  
+~~~
+
+with [httpie](https://httpie.io/)
+
+~~~
+http :8080/info file==Orobanche_aegyptiaca.jpg   
+~~~
+
+
+       
+
 ### Build Tools Reference Documentation
 For further reference, please consider the following sections:
 
