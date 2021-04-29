@@ -52,7 +52,7 @@ The service expects one mandatory configuration parameter
 
 Optional configuration parameter
 
-* `cacheExpirationMinutes` or `cacheExpirationHours`: These are exclusive options, `cacheExpirationHours` is set to **24 hours** per default.
+* `cacheExpirationMinutes` or `cacheExpirationHours`: These are exclusive options, `cacheExpirationHours` is set to **24 hours** per default. In order to set one of these values to `NULL` the string `"@null"` can be used in configurations. 
 
 For more details on the principle options of how to set the configuration property see [https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config](https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-external-config)
   

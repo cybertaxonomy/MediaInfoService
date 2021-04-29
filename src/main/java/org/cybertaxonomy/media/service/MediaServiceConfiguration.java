@@ -8,7 +8,9 @@
 */
 package org.cybertaxonomy.media.service;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 /**
  * Configuration to let Spring load PropertySources.
@@ -22,5 +24,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MediaServiceConfiguration {
 
+    /**
+     * Defines <code>@null</code> as string for configuring
+     * null values in for example application.properties.
+     */
+    @Bean
+    public PropertySourcesPlaceholderConfigurer propertySourceConfigurer() {
+        PropertySourcesPlaceholderConfigurer propertySourceConfigurer = new PropertySourcesPlaceholderConfigurer();
+        propertySourceConfigurer.setNullValue("@null");
+        return propertySourceConfigurer;
+
+    }
 
 }

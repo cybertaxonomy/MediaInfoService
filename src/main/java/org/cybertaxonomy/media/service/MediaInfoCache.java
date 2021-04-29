@@ -41,12 +41,14 @@ public class MediaInfoCache implements IMediaInfoCache, DisposableBean {
 
     /**
      * default set in /metadata-service/src/main/resources/application.properties
+     * null value supported by {@link MediaServiceConfiguration#propertySourceConfigurer()}
      */
     @Value("${cacheExpirationHours}")
     private Long cacheExpirationHours;
 
     /**
      * default set in /metadata-service/src/main/resources/application.properties
+     * null value supported by {@link MediaServiceConfiguration#propertySourceConfigurer()}
      */
     @Value("${cacheExpirationMinutes}")
     private Long cacheExpirationMinutes;
