@@ -29,8 +29,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -53,7 +57,7 @@ public class MediaInfoController {
     public MediaInfo doInfo(
             @RequestParam(value = "file", required = true) String relativePath,
             @RequestParam(value = "refresh", required = false) Boolean refreshCache
-            ) {
+            ) throws IOException {
 
         MediaInfo mediaInfo = null;
 
@@ -73,6 +77,7 @@ public class MediaInfoController {
                 mediaInfo = readImageInfo(relativePath);
             } catch (IOException e) {
                 logger.error("Error reading image info", e);
+                throw e;
             }
             try {
                 if(mediaInfo != null) {
@@ -134,6 +139,14 @@ public class MediaInfoController {
             throw new IOException(e);
         }
         return metadata;
+    }
+
+    @ExceptionHandler(IOException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleNoSuchElementFoundException(IOException exception) {
+      return ResponseEntity
+          .status(HttpStatus.NOT_FOUND)
+          .body(exception.getMessage());
     }
 
 }

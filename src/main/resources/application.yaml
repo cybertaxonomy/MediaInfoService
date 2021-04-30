@@ -1,0 +1,9 @@
+cacheExpirationHours: 24
+cacheExpirationMinutes: \@null
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on-trace-param
+    include-exception: false
+
