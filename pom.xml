@@ -11,7 +11,7 @@
   </parent>
   <groupId>org.cybertaxonomy.media</groupId>
   <artifactId>media-info-service</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.5-SNAPSHOT</version>
   <packaging>war</packaging>
   <name>media-info-service</name>
   <description>A media info and metada REST service</description>
