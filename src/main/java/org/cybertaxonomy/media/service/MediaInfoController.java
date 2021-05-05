@@ -101,6 +101,7 @@ public class MediaInfoController {
             inputStream = new FileInputStream(mediaFile);
             ImageInfo imageInfo = Imaging.getImageInfo(inputStream, null);
             ImageFormat imageFormat = imageInfo.getFormat();
+            metadata.setSize(mediaFile.length());
             metadata.setFormatName(imageFormat.getName());
             metadata.setExtension(imageFormat.getExtension());
             metadata.setMimeType(imageInfo.getMimeType());

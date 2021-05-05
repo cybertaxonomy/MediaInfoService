@@ -29,6 +29,7 @@ public class MediaInfo implements Serializable {
     private String formatName;
     private String extension;
     private String mimeType;
+    private long size;
     private Map<String, List<String>> metaData = new HashMap<>();
 
     public int getWidth() {
@@ -93,6 +94,20 @@ public class MediaInfo implements Serializable {
     }
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    /**
+     * Size in bytes
+     */
+    public long getSize() {
+        return size;
+    }
+
+    /**
+     * Size in bytes
+     */
+    public void setSize(long size) {
+        this.size = size;
     }
 
 
