@@ -1,2 +1,2 @@
-cacheExpirationHours: \@null
+cacheExpirationHours: "@null"
 cacheExpirationMinutes: 10

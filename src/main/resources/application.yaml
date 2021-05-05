@@ -1,5 +1,5 @@
 cacheExpirationHours: 24
-cacheExpirationMinutes: \@null
+cacheExpirationMinutes: "@null"
 server:
   error:
     include-message: always
