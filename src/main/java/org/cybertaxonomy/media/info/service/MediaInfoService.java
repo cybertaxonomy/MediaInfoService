@@ -6,7 +6,7 @@
 * The contents of this file are subject to the Mozilla Public License Version 1.1
 * See LICENSE.TXT at the top of this package for the full license terms.
 */
-package org.cybertaxonomy.media.service;
+package org.cybertaxonomy.media.info.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,29 +23,24 @@ import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.GenericImageMetadata.GenericImageMetadataItem;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
+import org.cybertaxonomy.media.info.model.MediaInfo;
+import org.cybertaxonomy.media.info.repository.IMediaInfoCache;
 import org.ehcache.spi.loaderwriter.CacheLoadingException;
 import org.ehcache.spi.loaderwriter.CacheWritingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
 /**
  * @author a.kohlbecker
- * @since Mar 11, 2021
+ * @since May 17, 2021
  */
+@Service
+public class MediaInfoService implements IMediaInfoService {
 
-@RestController
-public class MediaInfoController {
-
-    private static Logger logger = LoggerFactory.getLogger(MediaInfoController.class);
+    private static Logger logger = LoggerFactory.getLogger(MediaInfoService.class);
 
     @Value("${mediaHome}")
     private String mediaHome;
@@ -53,11 +48,9 @@ public class MediaInfoController {
     @Autowired
     private IMediaInfoCache cache;
 
-    @GetMapping("/info")
-    public MediaInfo doInfo(
-            @RequestParam(value = "file", required = true) String relativePath,
-            @RequestParam(value = "refresh", required = false) Boolean refreshCache
-            ) throws IOException {
+    @Override
+    public MediaInfo readImageInfo(String relativePath, Boolean refreshCache) throws IOException {
+
 
         MediaInfo mediaInfo = null;
 
@@ -142,12 +135,5 @@ public class MediaInfoController {
         return metadata;
     }
 
-    @ExceptionHandler(IOException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleNoSuchElementFoundException(IOException exception) {
-      return ResponseEntity
-          .status(HttpStatus.NOT_FOUND)
-          .body(exception.getMessage());
-    }
 
 }

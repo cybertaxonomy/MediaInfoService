@@ -1,2 +1,3 @@
 cacheExpirationHours: "@null"
 cacheExpirationMinutes: 10
+mediaHome: src/test/resources/images

@@ -6,7 +6,7 @@
 * The contents of this file are subject to the Mozilla Public License Version 1.1
 * See LICENSE.TXT at the top of this package for the full license terms.
 */
-package org.cybertaxonomy.media.service;
+package org.cybertaxonomy.media.info.model;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -19,6 +19,7 @@ import java.util.Map;
  * @since Mar 11, 2021
  */
 public class MediaInfo implements Serializable {
+
 
     private static final long serialVersionUID = -161167716008058196L;
 
@@ -89,11 +90,12 @@ public class MediaInfo implements Serializable {
         this.colorType = colorType;
     }
 
-    public String getExtenstion() {
-        return extension;
-    }
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public String getExtension() {
+        return extension;
     }
 
     /**

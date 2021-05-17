@@ -6,7 +6,7 @@
 * The contents of this file are subject to the Mozilla Public License Version 1.1
 * See LICENSE.TXT at the top of this package for the full license terms.
 */
-package org.cybertaxonomy.media.service;
+package org.cybertaxonomy.media.info.repository;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 
+import org.cybertaxonomy.media.info.model.MediaInfo;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
@@ -26,13 +27,13 @@ import org.ehcache.spi.loaderwriter.CacheLoadingException;
 import org.ehcache.spi.loaderwriter.CacheWritingException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author a.kohlbecker
  * @since Apr 27, 2021
  */
-@Component
+@Repository
 public class MediaInfoCache implements IMediaInfoCache, DisposableBean {
 
     private static final int CACHE_EXPIRATION_HOURS_DEFAULT = 1;

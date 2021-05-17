@@ -1,4 +1,4 @@
-package org.cybertaxonomy.media.service;
+package org.cybertaxonomy.media.info;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
