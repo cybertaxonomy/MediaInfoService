@@ -35,7 +35,7 @@ public class MediaInfoController {
     @GetMapping("/info")
     public MediaInfo doInfo(
             @RequestParam(value = "file", required = true) String relativePath,
-            @RequestParam(value = "refresh", required = false) Boolean refreshCache
+            @RequestParam(value = "refresh", required = false, defaultValue = "false") Boolean refreshCache
             ) throws IOException {
 
         MediaInfo mediaInfo = mediaInfoService.readImageInfo(relativePath, refreshCache);
