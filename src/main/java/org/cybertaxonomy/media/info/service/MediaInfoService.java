@@ -23,6 +23,7 @@ import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.GenericImageMetadata.GenericImageMetadataItem;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
+import org.cybertaxonomy.media.info.exceptions.MediaFileNotFoundException;
 import org.cybertaxonomy.media.info.model.MediaInfo;
 import org.cybertaxonomy.media.info.repository.IMediaInfoCache;
 import org.ehcache.spi.loaderwriter.CacheLoadingException;
@@ -90,6 +91,10 @@ public class MediaInfoService implements IMediaInfoService {
         MediaInfo metadata = new MediaInfo();
         try {
             File mediaFile = new File(mediaHome + File.separator + relativePath);
+            if(mediaFile.isDirectory() || !mediaFile.exists()) {
+                logger.info("file not found: " + mediaFile.getAbsolutePath());
+                throw new MediaFileNotFoundException();
+            }
             logger.info("processing request for: " + mediaFile.getAbsolutePath());
             inputStream = new FileInputStream(mediaFile);
             ImageInfo imageInfo = Imaging.getImageInfo(inputStream, null);
