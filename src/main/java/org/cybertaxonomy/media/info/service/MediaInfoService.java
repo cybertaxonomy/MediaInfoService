@@ -90,7 +90,7 @@ public class MediaInfoService implements IMediaInfoService {
         MediaInfo metadata = new MediaInfo();
         try {
             File mediaFile = new File(mediaHome + File.separator + relativePath);
-            logger.debug("processing request for: " + mediaFile.getAbsolutePath());
+            logger.info("processing request for: " + mediaFile.getAbsolutePath());
             inputStream = new FileInputStream(mediaFile);
             ImageInfo imageInfo = Imaging.getImageInfo(inputStream, null);
             ImageFormat imageFormat = imageInfo.getFormat();
@@ -108,21 +108,23 @@ public class MediaInfoService implements IMediaInfoService {
 
 
             ImageMetadata imageMetaData = Imaging.getMetadata(inputStream, null);
-            Map<String, List<String>> mdMap = metadata.getMetaData();
-            for (ImageMetadataItem item : imageMetaData.getItems()) {
-                if (GenericImageMetadataItem.class.isAssignableFrom(item.getClass())) {
-                    // no interest in GIFImageMetadata since this only includes
-                    // positioning information etc
-                    GenericImageMetadataItem gim = (GenericImageMetadataItem) item;
-                    String key = gim.getKeyword();
-                    String text = gim.getText();
-                    if(text != null && !text.isEmpty()) {
-                        if (!mdMap.containsKey(key))  {
-                            mdMap.put(key, new ArrayList<>());
-                        }
-                        if(!mdMap.get(gim.getKeyword()).stream().anyMatch(t -> t.equals(text))) {
-                            // add if no duplicate
-                            mdMap.get(gim.getKeyword()).add(text);
+            if(imageMetaData != null) {
+                Map<String, List<String>> mdMap = metadata.getMetaData();
+                for (ImageMetadataItem item : imageMetaData.getItems()) {
+                    if (GenericImageMetadataItem.class.isAssignableFrom(item.getClass())) {
+                        // no interest in GIFImageMetadata since this only includes
+                        // positioning information etc
+                        GenericImageMetadataItem gim = (GenericImageMetadataItem) item;
+                        String key = gim.getKeyword();
+                        String text = gim.getText();
+                        if(text != null && !text.isEmpty()) {
+                            if (!mdMap.containsKey(key))  {
+                                mdMap.put(key, new ArrayList<>());
+                            }
+                            if(!mdMap.get(gim.getKeyword()).stream().anyMatch(t -> t.equals(text))) {
+                                // add if no duplicate
+                                mdMap.get(gim.getKeyword()).add(text);
+                            }
                         }
                     }
                 }
