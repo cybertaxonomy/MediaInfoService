@@ -15,6 +15,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.imaging.ImageFormat;
 import org.apache.commons.imaging.ImageInfo;
@@ -43,6 +45,8 @@ import org.springframework.stereotype.Service;
 public class MediaInfoService implements IMediaInfoService {
 
     private static Logger logger = LoggerFactory.getLogger(MediaInfoService.class);
+
+    private static final Pattern FILE_EXTENSION_PATTERN = Pattern.compile("^(.+)\\.([^.]+)$");
 
     @Value("${mediaHome}")
     private String mediaHome;
@@ -92,14 +96,34 @@ public class MediaInfoService implements IMediaInfoService {
         MediaInfo metadata = new MediaInfo();
         try {
             File mediaFile = new File(mediaHome + File.separator + relativePath);
-            if(mediaFile.isDirectory() || !mediaFile.exists()) {
-                logger.info("file not found: " + mediaFile.getAbsolutePath());
+            if(mediaFile.isDirectory()) {
+                logger.info("request for directory: " + mediaFile.getAbsolutePath() + " sending 404");
                 throw new MediaFileNotFoundException();
+            }
+            if(!mediaFile.exists()) {
+                logger.info("file not found: " + mediaFile.getAbsolutePath());
+                Matcher m = FILE_EXTENSION_PATTERN.matcher(relativePath);
+                if(m.matches()) {
+                    String ext = m.group(2);
+                    if(!ext.equals(ext.toLowerCase())) {
+                        // try file with lowercase extension
+                        mediaFile = new File(mediaHome + File.separator + m.group(1) + "." + ext.toLowerCase());
+                        if(!mediaFile.exists()) {
+                            logger.info("file also not found with lowercase extension: " + mediaFile.getAbsolutePath());
+                        } else {
+                            logger.info("file found with lowercase extension: " + mediaFile.getAbsolutePath());
+                        }
+                    }
+                }
+            }
+            if(!mediaFile.exists()) {
+             throw new MediaFileNotFoundException();
             }
             logger.info("processing request for: " + mediaFile.getAbsolutePath());
             inputStream = new FileInputStream(mediaFile);
             ImageInfo imageInfo = Imaging.getImageInfo(inputStream, null);
             ImageFormat imageFormat = imageInfo.getFormat();
+            metadata.setFileName(mediaFile.getName());
             metadata.setSize(mediaFile.length());
             metadata.setFormatName(imageFormat.getName());
             metadata.setExtension(imageFormat.getExtension());
