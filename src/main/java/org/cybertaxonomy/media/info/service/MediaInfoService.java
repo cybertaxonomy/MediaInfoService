@@ -23,6 +23,7 @@ import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.common.GenericImageMetadata.GenericImageMetadataItem;
 import org.apache.commons.imaging.common.ImageMetadata;
 import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
+import org.cybertaxonomy.media.info.exceptions.ImageFileReadException;
 import org.cybertaxonomy.media.info.exceptions.MediaFileNotFoundException;
 import org.cybertaxonomy.media.info.model.MediaInfo;
 import org.cybertaxonomy.media.info.repository.IMediaInfoCache;
@@ -137,7 +138,7 @@ public class MediaInfoService implements IMediaInfoService {
             inputStream.close();
         } catch (ImageReadException e) {
             logger.error("Could not read: " + relativePath + ". " + e.getMessage());
-            throw new IOException(e);
+            throw new ImageFileReadException(e);
         }
         return metadata;
     }
